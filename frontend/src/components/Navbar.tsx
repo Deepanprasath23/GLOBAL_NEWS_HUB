@@ -42,6 +42,12 @@ export const Navbar: React.FC<NavbarProps> = ({
     onSearch('');
   };
 
+  const handleTabClick = (tab: string) => {
+    setLocalSearch('');
+    onSelectTab(tab);
+  };
+
+
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
       {/* Top Banner Notice */}
@@ -79,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Brand Logo */}
           <div
-            onClick={() => { onSelectTab('feed'); handleClearSearch(); }}
+            onClick={() => handleTabClick('feed')}
             className="flex items-center gap-3 cursor-pointer group flex-shrink-0"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/10 group-hover:shadow-cyan-500/25 transition-all">
@@ -126,7 +132,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Navigation Links */}
           <nav className="flex items-center gap-1 sm:gap-2">
             <button
-              onClick={() => { onSelectTab('feed'); handleClearSearch(); }}
+              onClick={() => handleTabClick('feed')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'feed'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
@@ -138,7 +144,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => { onSelectTab('trending'); handleClearSearch(); }}
+              onClick={() => handleTabClick('trending')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'trending'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
@@ -150,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => { onSelectTab('briefing'); handleClearSearch(); }}
+              onClick={() => handleTabClick('briefing')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'briefing'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
@@ -162,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => { onSelectTab('docs'); handleClearSearch(); }}
+              onClick={() => handleTabClick('docs')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'docs'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'
@@ -174,7 +180,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => { onSelectTab('sources'); handleClearSearch(); }}
+              onClick={() => handleTabClick('sources')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'sources'
                   ? 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/30'

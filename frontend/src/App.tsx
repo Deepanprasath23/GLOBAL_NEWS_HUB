@@ -101,8 +101,20 @@ export const App: React.FC = () => {
       fetchFeed(selectedCategory, searchQuery, 1, false);
     } else if (currentTab === 'trending') {
       fetchTrending();
+    } else if (currentTab === 'briefing' && !briefing) {
+      setIsLoading(true);
+      apiService.getBriefing()
+        .then(setBriefing)
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
+    } else if (currentTab === 'sources' && sources.length === 0) {
+      setIsLoading(true);
+      apiService.getSources()
+        .then(setSources)
+        .catch(console.error)
+        .finally(() => setIsLoading(false));
     }
-  }, [currentTab, selectedCategory, searchQuery, fetchFeed, fetchTrending]);
+  }, [currentTab, selectedCategory, searchQuery, fetchFeed, fetchTrending, briefing, sources.length]);
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -110,7 +122,30 @@ export const App: React.FC = () => {
       await fetchFeed(selectedCategory, searchQuery, 1, false);
     } else if (currentTab === 'trending') {
       await fetchTrending();
+    } else if (currentTab === 'briefing') {
+      try {
+        const b = await apiService.getBriefing();
+        setBriefing(b);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsRefreshing(false);
+      }
+    } else if (currentTab === 'sources') {
+      try {
+        const s = await apiService.getSources();
+        setSources(s);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsRefreshing(false);
+      }
     }
+  };
+
+  const handleSelectTab = (tab: string) => {
+    setCurrentTab(tab);
+    setSearchQuery('');
   };
 
   const handleSelectCategory = (catSlug: string | null) => {
@@ -121,7 +156,9 @@ export const App: React.FC = () => {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setCurrentTab('feed');
+    if (query.trim()) {
+      setCurrentTab('feed');
+    }
   };
 
   const handleLoadMore = () => {
@@ -135,7 +172,7 @@ export const App: React.FC = () => {
       {/* Top Navigation */}
       <Navbar
         currentTab={currentTab}
-        onSelectTab={setCurrentTab}
+        onSelectTab={handleSelectTab}
         onSearch={handleSearch}
         searchQuery={searchQuery}
         isCached={isCached}
