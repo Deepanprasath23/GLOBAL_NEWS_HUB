@@ -27,7 +27,7 @@ export const HeroBriefing: React.FC<HeroBriefingProps> = ({ briefing, onOpenArti
               <span className="text-slate-300 font-normal">{briefing.categories_covered} Categories Synthesized</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-['Outfit']">
-              {briefing.greeting}
+              Welcome, Global Intelligence Brief
             </h2>
           </div>
 
