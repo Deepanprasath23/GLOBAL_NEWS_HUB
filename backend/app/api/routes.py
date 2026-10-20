@@ -126,7 +126,7 @@ async def get_article(article_id: str = Path(..., description="Hexadecimal artic
 @router.get(
     "/briefing",
     response_model=BriefingResponse,
-    summary="Global Morning / Evening Executive Brief",
+    summary="Global Executive Brief",
     description="Generates an editorial summary lead and cross-category key bulletins for rapid 2-minute catching up."
 )
 async def get_briefing():

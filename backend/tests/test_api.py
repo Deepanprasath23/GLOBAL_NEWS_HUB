@@ -1,3 +1,6 @@
+import asyncio
+from importlib import import_module
+
 import pytest
 from fastapi.testclient import TestClient
 from backend.app.main import app
@@ -9,7 +12,23 @@ from backend.app.ingestion.deduplicator import (
 from backend.app.schemas.models import Article
 from backend.app.cache import InMemoryTTLCache
 
+aggregator_module = import_module("backend.app.services.aggregator")
+
 client = TestClient(app)
+
+def test_briefing_uses_a_fixed_welcome_greeting(monkeypatch):
+    briefing_cache = InMemoryTTLCache()
+    monkeypatch.setattr(aggregator_module, "cache", briefing_cache)
+
+    async def get_empty_feed(category=None):
+        return [], False, False
+
+    feed_aggregator = aggregator_module.FeedAggregator()
+    monkeypatch.setattr(feed_aggregator, "get_raw_feed", get_empty_feed)
+
+    briefing = asyncio.run(feed_aggregator.get_briefing())
+
+    assert briefing.greeting == "Welcome, Global Intelligence Brief"
 
 def test_health_endpoint():
     response = client.get("/api/v1/health")
@@ -97,4 +116,3 @@ def test_in_memory_ttl_cache():
         assert stale[0] == {"msg": "hello"}
 
     asyncio.run(_run_test())
-

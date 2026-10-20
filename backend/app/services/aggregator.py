@@ -266,12 +266,10 @@ class FeedAggregator:
                 bulletins.append(f"[{art.source}] {art.title}")
 
         now = datetime.datetime.now(datetime.timezone.utc)
-        hour = now.hour
-        greeting = "Good Morning" if 4 <= hour < 12 else "Good Afternoon" if 12 <= hour < 18 else "Good Evening"
 
         briefing = BriefingResponse(
             generated_at=now.isoformat(),
-            greeting=f"{greeting}, Global Intelligence Brief",
+            greeting="Welcome, Global Intelligence Brief",
             summary_lead="A unified 2-minute overview of pivotal international developments, technology breakthroughs, and economic updates.",
             key_bulletins=bulletins,
             top_developments=briefing_stories,
