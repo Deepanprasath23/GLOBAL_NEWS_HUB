@@ -67,7 +67,7 @@ export const DevDocs: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-10 py-4">
       {/* Header */}
       <div>
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-semibold mb-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs font-semibold mb-3">
           <Terminal className="w-3.5 h-3.5" />
           <span>OPEN REST API SPECIFICATION</span>
         </div>
@@ -80,7 +80,7 @@ export const DevDocs: React.FC = () => {
       </div>
 
       {/* OpenAPI Swagger Link Callout */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-cyan-950/30 to-slate-900 border border-cyan-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-[#0f172a] border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h3 className="text-lg font-bold text-white mb-1 font-['Outfit']">
             Interactive OpenAPI / Swagger UI
@@ -93,7 +93,7 @@ export const DevDocs: React.FC = () => {
           href="/docs"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs tracking-wide transition-all shadow-md shadow-cyan-500/20 flex-shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs tracking-wide transition-all shadow-sm flex-shrink-0"
         >
           <span>Open Swagger UI</span>
           <ExternalLink className="w-3.5 h-3.5" />
@@ -102,8 +102,8 @@ export const DevDocs: React.FC = () => {
 
       {/* Architecture & Caching Principles */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <div className="flex items-center gap-2 text-cyan-400 mb-2">
+        <div className="p-5 rounded-2xl bg-[#0f172a] border border-slate-800">
+          <div className="flex items-center gap-2 text-emerald-400 mb-2">
             <Cpu className="w-4 h-4" />
             <h4 className="text-sm font-bold text-white">In-Memory TTL Caching</h4>
           </div>
@@ -112,13 +112,13 @@ export const DevDocs: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <div className="flex items-center gap-2 text-cyan-400 mb-2">
+        <div className="p-5 rounded-2xl bg-[#0f172a] border border-slate-800">
+          <div className="flex items-center gap-2 text-emerald-400 mb-2">
             <Shield className="w-4 h-4" />
             <h4 className="text-sm font-bold text-white">Fair Usage & Attribution</h4>
           </div>
           <p className="text-xs text-slate-400 leading-relaxed">
-            Please respect upstream providers. Cache API responses client-side, do not scrape in tight loops, and always maintain author and publisher attribution links provided in the <code className="text-cyan-300">content_url</code> property.
+            Please respect upstream providers. Cache API responses client-side, do not scrape in tight loops, and always maintain author and publisher attribution links provided in the <code className="text-emerald-300">content_url</code> property.
           </p>
         </div>
       </div>
@@ -135,7 +135,7 @@ export const DevDocs: React.FC = () => {
             return (
               <div
                 key={idx}
-                className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-colors"
+                className="p-5 rounded-2xl bg-[#0f172a] border border-slate-800 hover:border-slate-700 transition-colors"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2.5">
@@ -148,7 +148,7 @@ export const DevDocs: React.FC = () => {
                   </div>
                   <button
                     onClick={() => copyToClipboard(curlCmd, ep.path)}
-                    className="self-start sm:self-center flex items-center gap-1 text-[11px] text-slate-400 hover:text-cyan-400 font-mono transition-colors"
+                    className="self-start sm:self-center flex items-center gap-1 text-[11px] text-slate-400 hover:text-emerald-400 font-mono transition-colors"
                   >
                     {copiedEndpoint === ep.path ? (
                       <>
@@ -168,9 +168,9 @@ export const DevDocs: React.FC = () => {
                   {ep.description}
                 </p>
 
-                <div className="p-2.5 rounded-lg bg-slate-950 border border-slate-800/80 text-[11px] font-mono text-slate-300 flex items-center justify-between overflow-x-auto">
+                <div className="p-2.5 rounded-lg bg-[#080d1a] border border-slate-800/80 text-[11px] font-mono text-slate-300 flex items-center justify-between overflow-x-auto">
                   <span className="text-slate-500 mr-2">Query/Path params:</span>
-                  <span className="text-cyan-300 truncate">{ep.params}</span>
+                  <span className="text-emerald-300 truncate">{ep.params}</span>
                 </div>
               </div>
             );

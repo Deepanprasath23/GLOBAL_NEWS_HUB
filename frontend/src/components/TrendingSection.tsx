@@ -18,8 +18,8 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   if (isLoading) {
     return (
       <div className="py-16 text-center">
-        <div className="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-slate-400 text-sm">Synthesizing real-time cross-publisher velocity signals...</p>
+        <div className="inline-block w-8 h-8 border-2 border-[#49CF9E] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-[#A0A0A0] text-sm">Synthesizing real-time cross-publisher velocity signals...</p>
       </div>
     );
   }
@@ -27,9 +27,9 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   if (!trendingData || trendingData.trending_topics.length === 0) {
     return (
       <div className="py-16 text-center glass-panel rounded-2xl max-w-md mx-auto p-8">
-        <Flame className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-        <h3 className="text-lg font-bold text-white mb-1">Awaiting Velocity Thresholds</h3>
-        <p className="text-xs text-slate-400 leading-relaxed">
+        <Flame className="w-10 h-10 text-[#777777] mx-auto mb-3" />
+        <h3 className="text-lg font-bold text-white mb-1">Awaiting Velocity Signals</h3>
+        <p className="text-xs text-[#A0A0A0] leading-relaxed">
           Trending topics require verified multi-publisher coverage or significant Hacker News engagement. Please check back shortly.
         </p>
       </div>
@@ -37,11 +37,11 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-10">
       {/* Explainable Methodology Banner */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-cyan-900/40 flex items-start gap-3.5">
-        <ShieldCheck className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-        <div className="text-xs text-slate-300 leading-relaxed">
+      <div className="p-4 sm:p-5 rounded-2xl bg-[#111827]/90 border border-white/10 flex items-start gap-3.5">
+        <ShieldCheck className="w-5 h-5 text-[#49CF9E] flex-shrink-0 mt-0.5" />
+        <div className="text-xs text-[#C8C8C8] leading-relaxed">
           <span className="font-semibold text-white">Honest Signal Measurement: </span>
           Unlike platforms that invent arbitrary percentages or fake search counts, our trending ranking is derived strictly from
           <strong> multi-publisher cross-confirmation</strong> (independent publishers simultaneously covering the same development),
@@ -51,14 +51,14 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
 
       {/* Measurable Trending Topics Grid */}
       <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-2">
-            <Flame className="w-5 h-5 text-amber-400 fill-amber-400/20" />
+            <Flame className="w-5 h-5 text-[#49CF9E]" />
             <h2 className="text-xl sm:text-2xl font-bold text-white font-['Outfit']">
               Cross-Source Velocity Topics
             </h2>
           </div>
-          <span className="text-xs text-slate-500 font-mono">
+          <span className="text-xs text-[#94A3B8] font-mono">
             Updated: {new Date(trendingData.generated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
         </div>
@@ -69,14 +69,14 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             return (
               <div
                 key={idx}
-                className="glass-panel glass-panel-hover rounded-2xl p-5 border border-slate-800 flex flex-col justify-between"
+                className="glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}>
                       {t.category.toUpperCase()}
                     </span>
-                    <span className="text-xs font-mono font-bold text-cyan-400 flex items-center gap-1 bg-cyan-950/60 px-2 py-0.5 rounded-md border border-cyan-800/50">
+                    <span className="text-xs font-mono font-bold text-[#86B99A] flex items-center gap-1 bg-[#49CF9E]/10 px-2 py-0.5 rounded-md border border-[#49CF9E]/20">
                       <Activity className="w-3 h-3" />
                       Velocity {t.velocity_score}
                     </span>
@@ -86,22 +86,22 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
                     {t.topic}
                   </h3>
 
-                  <div className="text-xs text-cyan-300/90 font-medium mb-3 flex items-center gap-1.5 bg-cyan-950/30 p-2 rounded-lg border border-cyan-900/30">
-                    <Layers className="w-3.5 h-3.5 flex-shrink-0 text-cyan-400" />
+                  <div className="text-xs text-[#D1D5DB] font-medium mb-3 flex items-center gap-1.5 bg-[#100e0b]/60 p-2 rounded-lg border border-white/10">
+                    <Layers className="w-3.5 h-3.5 flex-shrink-0 text-[#49CF9E]" />
                     <span>{t.explanation}</span>
                   </div>
 
                   {/* Sample headlines */}
                   <div className="space-y-1.5 mb-4">
                     {t.sample_headlines.map((hl, hIdx) => (
-                      <p key={hIdx} className="text-xs text-slate-400 line-clamp-1 italic">
+                      <p key={hIdx} className="text-xs text-[#A0A0A0] line-clamp-1 italic">
                         "{hl}"
                       </p>
                     ))}
                   </div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-[#94A3B8]">
                   <span>{t.source_names.length} source{t.source_names.length > 1 ? 's' : ''} covering</span>
                   <span>{t.mention_count} dispatches</span>
                 </div>
@@ -113,8 +113,8 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
 
       {/* Top Ranked Trending Stories Feed */}
       <div>
-        <div className="flex items-center gap-2 mb-6">
-          <Activity className="w-5 h-5 text-cyan-400" />
+        <div className="flex items-center gap-2 mb-5">
+          <Activity className="w-5 h-5 text-[#49CF9E]" />
           <h2 className="text-xl sm:text-2xl font-bold text-white font-['Outfit']">
             Highest Signal Stories
           </h2>

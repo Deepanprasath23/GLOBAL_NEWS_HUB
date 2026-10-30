@@ -1,22 +1,38 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Navbar } from './components/Navbar';
 import { CategoryBar } from './components/CategoryBar';
 import { StoryCard } from './components/StoryCard';
 import { ArticleModal } from './components/ArticleModal';
 import { HeroBriefing } from './components/HeroBriefing';
 import { TrendingSection } from './components/TrendingSection';
-import { DevDocs } from './components/DevDocs';
 import { SourcesDirectory } from './components/SourcesDirectory';
-import { Footer } from './components/Footer';
+import { AuroraBackground } from './components/AuroraBackground';
 import { apiService } from './services/api';
 import { Article, Category, TrendingResponse, BriefingResponse, SourceInfo } from './types';
-import { AlertCircle, RefreshCw, Sparkles, Filter, ChevronRight, Layers } from 'lucide-react';
+import {
+  AlertCircle,
+  Layers,
+  Clock,
+  Flame,
+  ArrowDownAZ,
+  LayoutGrid,
+  List,
+  Activity,
+  Sparkles,
+  ChevronRight
+} from 'lucide-react';
+
+type SortOption = 'latest' | 'trending' | 'multisource' | 'source';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('feed');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
   
+  // Sorting and Display states
+  const [sortBy, setSortBy] = useState<SortOption>('latest');
+  const [viewMode, setViewMode] = useState<'grid' | 'compact'>('grid');
+
   // Data states
   const [categories, setCategories] = useState<Category[]>([]);
   const [articles, setArticles] = useState<Article[]>([]);
@@ -34,19 +50,21 @@ export const App: React.FC = () => {
   const [page, setPage] = useState<number>(1);
   const [totalStories, setTotalStories] = useState<number>(0);
 
-  // Load Categories & Briefing initially
+  // Load Categories, Briefing, Sources, and Trending initially
   useEffect(() => {
     async function loadInitialMetadata() {
       try {
-        const [catData, briefData, srcData] = await Promise.allSettled([
+        const [catData, briefData, srcData, trendData] = await Promise.allSettled([
           apiService.getCategories(),
           apiService.getBriefing(),
-          apiService.getSources()
+          apiService.getSources(),
+          apiService.getTrending()
         ]);
 
         if (catData.status === 'fulfilled') setCategories(catData.value);
         if (briefData.status === 'fulfilled') setBriefing(briefData.value);
         if (srcData.status === 'fulfilled') setSources(srcData.value);
+        if (trendData.status === 'fulfilled') setTrendingData(trendData.value);
       } catch (err) {
         console.error('Error loading initial data:', err);
       }
@@ -166,8 +184,37 @@ export const App: React.FC = () => {
     fetchFeed(selectedCategory, searchQuery, nextPage, true);
   };
 
+  // Client-side dynamic sorting
+  const sortedArticles = useMemo(() => {
+    const items = [...articles];
+    if (sortBy === 'latest') {
+      return items.sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime());
+    }
+    if (sortBy === 'trending') {
+      return items.sort((a, b) => {
+        const scoreA = (a.score || 0) * 2 + (a.comment_count || 0) * 3 + (a.related_links?.length || 0) * 15;
+        const scoreB = (b.score || 0) * 2 + (b.comment_count || 0) * 3 + (b.related_links?.length || 0) * 15;
+        return scoreB - scoreA;
+      });
+    }
+    if (sortBy === 'multisource') {
+      return items.sort((a, b) => {
+        const linksA = a.related_links?.length || 0;
+        const linksB = b.related_links?.length || 0;
+        if (linksB !== linksA) return linksB - linksA;
+        return new Date(b.published_at).getTime() - new Date(a.published_at).getTime();
+      });
+    }
+    if (sortBy === 'source') {
+      return items.sort((a, b) => a.source.localeCompare(b.source));
+    }
+    return items;
+  }, [articles, sortBy]);
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100">
+    <div className="relative min-h-screen">
+      <AuroraBackground />
+      <div className="relative z-10 min-h-screen flex flex-col text-[#D1D5DB]">
       
       {/* Top Navigation */}
       <Navbar
@@ -179,6 +226,35 @@ export const App: React.FC = () => {
         onRefresh={handleRefresh}
         isRefreshing={isRefreshing}
       />
+
+      {/* Available News Live Ticker Strip */}
+      {articles.length > 0 && currentTab === 'feed' && (
+        <div className="border-b border-white/10 bg-[#111827]/75 py-2 overflow-x-auto scrollbar-none">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-3 min-w-max">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#49CF9E]/10 border border-[#49CF9E]/20 text-[#86B99A] text-[11px] font-bold tracking-wider uppercase flex-shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#49CF9E] animate-pulse"></span>
+              <span>Available News</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs">
+              {articles.slice(0, 8).map((story) => (
+                <button
+                  key={story.id}
+                  onClick={() => setSelectedArticle(story)}
+                  className="px-2.5 py-1 rounded-lg bg-[#1F2937] hover:bg-[#243041] border border-white/10 hover:border-[#49CF9E]/30 text-[#D1D5DB] hover:text-white transition-colors flex items-center gap-2 max-w-md group"
+                  title={story.title}
+                >
+                  <span className="text-[10px] font-semibold text-[#86B99A] bg-[#49CF9E]/10 px-1.5 py-0.5 rounded border border-[#49CF9E]/20 uppercase flex-shrink-0">
+                    {story.source}
+                  </span>
+                  <span className="font-medium truncate group-hover:text-white text-[#D0D0D0]">
+                    {story.title}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Category Pills Bar (Always available on feed view) */}
       {currentTab === 'feed' && (
@@ -194,16 +270,16 @@ export const App: React.FC = () => {
         
         {/* Stale Cache Notice if external upstream failed */}
         {isStale && (
-          <div className="mb-6 p-4 rounded-2xl bg-amber-950/40 border border-amber-600/40 text-amber-300 text-xs flex items-center justify-between">
+          <div className="mb-6 p-4 rounded-xl bg-[#332a1e] border border-[#664d26] text-[#e0bc70] text-xs flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-amber-400" />
+              <AlertCircle className="w-4 h-4 text-[#e0bc70] flex-shrink-0" />
               <span>
                 <strong>Upstream Latency Detected:</strong> Serving previous in-memory cache snapshot while background workers reconnect.
               </span>
             </div>
             <button
               onClick={handleRefresh}
-              className="px-2.5 py-1 rounded bg-amber-900/60 hover:bg-amber-800 text-amber-200 font-semibold text-[11px]"
+              className="px-2.5 py-1 rounded bg-[#4a3a22] hover:bg-[#5a4729] text-[#e0bc70] font-semibold text-[11px]"
             >
               Retry
             </button>
@@ -213,7 +289,7 @@ export const App: React.FC = () => {
         {/* FEED TAB */}
         {currentTab === 'feed' && (
           <div>
-            {/* Show Briefing banner only on main All Feed view without search */}
+            {/* Show Executive Briefing spotlight banner only on main All Feed view without search */}
             {selectedCategory === null && !searchQuery && (
               <HeroBriefing
                 briefing={briefing}
@@ -221,10 +297,10 @@ export const App: React.FC = () => {
               />
             )}
 
-            {/* Header info row for current view */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            {/* Feed Control Bar: Header, Sorting Options, and View Mode Toggle */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-['Outfit'] flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-['Outfit'] flex items-center gap-2">
                   {searchQuery ? (
                     <>Search results for "{searchQuery}"</>
                   ) : selectedCategory ? (
@@ -233,7 +309,7 @@ export const App: React.FC = () => {
                     <>Latest Global Dispatches</>
                   )}
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-400 mt-1">
+                <p className="text-sm text-[#9CA3AF] mt-1">
                   {searchQuery ? (
                     `Found ${totalStories} live stories matching query`
                   ) : selectedCategory ? (
@@ -244,23 +320,106 @@ export const App: React.FC = () => {
                 </p>
               </div>
 
-              {/* Status counter */}
-              <div className="flex items-center gap-2 self-start sm:self-center">
-                <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-400">
-                  {articles.length} of {totalStories} stories
+              {/* Sort selector & layout switcher */}
+              <div className="flex items-center gap-3 flex-wrap">
+                {/* Sorting Buttons */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-[#1F2937] border border-white/10 text-xs">
+                  <button
+                    onClick={() => setSortBy('latest')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                      sortBy === 'latest'
+                        ? 'bg-[#49CF9E] text-[#100e0b] font-bold shadow-xs'
+                        : 'text-[#9CA3AF] hover:text-white'
+                    }`}
+                    title="Sort by newest published time"
+                  >
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>Latest</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSortBy('trending')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                      sortBy === 'trending'
+                        ? 'bg-[#49CF9E] text-[#100e0b] font-bold shadow-xs'
+                        : 'text-[#9CA3AF] hover:text-white'
+                    }`}
+                    title="Sort by Hacker News score and discussion velocity"
+                  >
+                    <Flame className="w-3.5 h-3.5" />
+                    <span>Trending</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSortBy('multisource')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                      sortBy === 'multisource'
+                        ? 'bg-[#49CF9E] text-[#100e0b] font-bold shadow-xs'
+                        : 'text-[#9CA3AF] hover:text-white'
+                    }`}
+                    title="Prioritize stories confirmed by multiple publishers"
+                  >
+                    <Layers className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Cross-Source</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSortBy('source')}
+                    className={`flex items-center gap-1 px-2.5 py-1 rounded-lg font-medium transition-all ${
+                      sortBy === 'source'
+                        ? 'bg-[#49CF9E] text-[#100e0b] font-bold shadow-xs'
+                        : 'text-[#9CA3AF] hover:text-white'
+                    }`}
+                    title="Sort alphabetically by publisher source"
+                  >
+                    <ArrowDownAZ className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Publisher</span>
+                  </button>
+                </div>
+
+                {/* View Mode Toggle: Grid vs Compact List */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-[#1F2937] border border-white/10">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 rounded-lg transition-colors ${
+                      viewMode === 'grid'
+                        ? 'bg-[#243041] text-[#49CF9E]'
+                        : 'text-[#94A3B8] hover:text-white'
+                    }`}
+                    title="Grid view"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('compact')}
+                    className={`p-1.5 rounded-lg transition-colors ${
+                      viewMode === 'compact'
+                        ? 'bg-[#243041] text-[#49CF9E]'
+                        : 'text-[#94A3B8] hover:text-white'
+                    }`}
+                    title="Compact editorial list view"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Total Counter Badge */}
+                <span className="text-xs font-mono px-2.5 py-1.5 rounded-xl bg-[#1F2937] border border-white/10 text-[#9CA3AF]">
+                  {articles.length} of {totalStories}
                 </span>
+
               </div>
             </div>
 
             {/* Error State */}
             {error && (
-              <div className="p-8 text-center glass-panel rounded-3xl max-w-lg mx-auto">
+              <div className="p-8 text-center bg-[#111827]/90 border border-white/10 rounded-2xl max-w-lg mx-auto">
                 <AlertCircle className="w-10 h-10 text-rose-400 mx-auto mb-3" />
                 <h3 className="text-base font-bold text-white mb-2">Connection Problem</h3>
-                <p className="text-xs text-slate-400 mb-4">{error}</p>
+                <p className="text-xs text-[#A0A0A0] mb-4">{error}</p>
                 <button
                   onClick={handleRefresh}
-                  className="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-semibold hover:bg-cyan-400 transition-all"
+                  className="px-4 py-2 rounded-xl bg-[#49CF9E] text-[#100e0b] font-bold text-xs hover:bg-[#86B99A] transition-all shadow-sm"
                 >
                   Reconnect
                 </button>
@@ -270,23 +429,23 @@ export const App: React.FC = () => {
             {/* Loading Indicator */}
             {isLoading && articles.length === 0 && (
               <div className="py-24 text-center">
-                <div className="inline-block w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
-                <p className="text-xs text-slate-400">Fetching real-time feeds from global publishers...</p>
+                <div className="inline-block w-8 h-8 border-2 border-[#49CF9E] border-t-transparent rounded-full animate-spin mb-3"></div>
+                <p className="text-xs text-[#A0A0A0]">Fetching real-time feeds from global publishers...</p>
               </div>
             )}
 
             {/* Empty State */}
             {!isLoading && articles.length === 0 && !error && (
-              <div className="p-12 text-center glass-panel rounded-3xl max-w-md mx-auto">
-                <Layers className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+              <div className="p-12 text-center bg-[#111827]/90 border border-white/10 rounded-2xl max-w-md mx-auto">
+                <Layers className="w-10 h-10 text-[#666666] mx-auto mb-3" />
                 <h3 className="text-base font-bold text-white mb-1">No Stories Available</h3>
-                <p className="text-xs text-slate-400 leading-relaxed mb-4">
+                <p className="text-xs text-[#A0A0A0] leading-relaxed mb-4">
                   No live reports match your filter criteria. Try clearing search or choosing another category.
                 </p>
                 {searchQuery && (
                   <button
                     onClick={() => { setSearchQuery(''); setSelectedCategory(null); }}
-                    className="px-4 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-semibold hover:bg-cyan-400"
+                    className="px-4 py-2 rounded-xl bg-[#49CF9E] text-[#100e0b] font-bold text-xs hover:bg-[#86B99A]"
                   >
                     View All Stories
                   </button>
@@ -294,24 +453,38 @@ export const App: React.FC = () => {
               </div>
             )}
 
-            {/* Stories Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((story) => (
-                <StoryCard
-                  key={story.id}
-                  article={story}
-                  onOpenDetails={(art) => setSelectedArticle(art)}
-                />
-              ))}
-            </div>
+            {/* Stories Grid / Compact List */}
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sortedArticles.map((story) => (
+                  <StoryCard
+                    key={story.id}
+                    article={story}
+                    layoutMode="grid"
+                    onOpenDetails={(art) => setSelectedArticle(art)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-2.5">
+                {sortedArticles.map((story) => (
+                  <StoryCard
+                    key={story.id}
+                    article={story}
+                    layoutMode="compact"
+                    onOpenDetails={(art) => setSelectedArticle(art)}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Load More Button */}
             {articles.length > 0 && articles.length < totalStories && (
-              <div className="mt-12 text-center">
+              <div className="mt-10 text-center">
                 <button
                   onClick={handleLoadMore}
                   disabled={isLoading}
-                  className="px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-400 font-semibold text-xs tracking-wide transition-all shadow-lg hover:border-cyan-500/40 disabled:opacity-50"
+                  className="px-6 py-2.5 rounded-xl bg-[#1F2937] hover:bg-[#243041] border border-white/10 text-[#86B99A] hover:text-white font-semibold text-xs tracking-wide transition-all hover:border-[#49CF9E]/30 disabled:opacity-50"
                 >
                   {isLoading ? 'Loading additional reports...' : 'Load More Stories'}
                 </button>
@@ -355,9 +528,6 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* API DEVELOPER DOCS TAB */}
-        {currentTab === 'docs' && <DevDocs />}
-
         {/* SOURCES DIRECTORY TAB */}
         {currentTab === 'sources' && (
           <SourcesDirectory sources={sources} isLoading={isLoading} />
@@ -371,9 +541,7 @@ export const App: React.FC = () => {
         onClose={() => setSelectedArticle(null)}
       />
 
-      {/* Footer */}
-      <Footer onSelectTab={(tab) => { setCurrentTab(tab); setSelectedCategory(null); }} />
-
+      </div>
     </div>
   );
 };

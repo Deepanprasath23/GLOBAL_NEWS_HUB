@@ -7,16 +7,16 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onSelectTab }) => {
   return (
-    <footer className="mt-20 border-t border-slate-900 bg-slate-950/80 pt-12 pb-8">
+    <footer className="mt-20 border-t border-slate-800/80 bg-[#080d1a] pt-12 pb-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
           
           {/* Brand & Philosophy */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
-              <Globe className="w-5 h-5 text-cyan-400" />
+              <Globe className="w-5 h-5 text-emerald-400" />
               <span className="text-base font-bold text-white font-['Outfit']">
-                GLOBAL<span className="text-cyan-400">TRENDS</span> HUB
+                GLOBAL<span className="text-emerald-400">TRENDS</span> HUB
               </span>
             </div>
             <p className="text-sm font-semibold text-slate-300 italic">
@@ -34,22 +34,22 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab }) => {
             </h4>
             <ul className="space-y-1.5 text-xs text-slate-400">
               <li>
-                <button onClick={() => onSelectTab('feed')} className="hover:text-cyan-400 transition-colors">
+                <button onClick={() => onSelectTab('feed')} className="hover:text-emerald-400 transition-colors">
                   Latest Global Dispatches
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab('trending')} className="hover:text-cyan-400 transition-colors">
+                <button onClick={() => onSelectTab('trending')} className="hover:text-emerald-400 transition-colors">
                   Measurable Trending Topics
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab('briefing')} className="hover:text-cyan-400 transition-colors">
-                  Executive 2-Minute Briefing
+                <button onClick={() => onSelectTab('briefing')} className="hover:text-emerald-400 transition-colors">
+                  Executive Briefing
                 </button>
               </li>
               <li>
-                <button onClick={() => onSelectTab('sources')} className="hover:text-cyan-400 transition-colors">
+                <button onClick={() => onSelectTab('sources')} className="hover:text-emerald-400 transition-colors">
                   Data Sources & Attributions
                 </button>
               </li>
@@ -63,13 +63,13 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab }) => {
             </h4>
             <ul className="space-y-1.5 text-xs text-slate-400">
               <li>
-                <button onClick={() => onSelectTab('docs')} className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+                <button onClick={() => onSelectTab('docs')} className="hover:text-emerald-400 transition-colors flex items-center gap-1">
                   <Terminal className="w-3 h-3" />
                   <span>Public REST API</span>
                 </button>
               </li>
               <li>
-                <a href="/docs" target="_blank" rel="noopener noreferrer" className="hover:text-cyan-400 transition-colors">
+                <a href="/docs" target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 transition-colors">
                   Interactive OpenAPI (Swagger)
                 </a>
               </li>

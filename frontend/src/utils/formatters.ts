@@ -17,24 +17,24 @@ export function formatRelativeTime(isoString: string): string {
 export function getCategoryBadgeStyle(slug: string): { bg: string; text: string; border: string } {
   switch (slug) {
     case 'artificial-intelligence':
-      return { bg: 'bg-purple-950/40', text: 'text-purple-300', border: 'border-purple-500/30' };
+      return { bg: 'bg-[#593E97]/25', text: 'text-[#c4b5fd]', border: 'border-[#593E97]/45' };
     case 'technology':
-      return { bg: 'bg-cyan-950/40', text: 'text-cyan-300', border: 'border-cyan-500/30' };
+      return { bg: 'bg-[#49CF9E]/10', text: 'text-[#86B99A]', border: 'border-[#49CF9E]/25' };
     case 'world-news':
     case 'politics':
-      return { bg: 'bg-blue-950/40', text: 'text-blue-300', border: 'border-blue-500/30' };
+      return { bg: 'bg-[#00E5FF]/10', text: 'text-[#8CEAF4]', border: 'border-[#00E5FF]/25' };
     case 'sports':
-      return { bg: 'bg-emerald-950/40', text: 'text-emerald-300', border: 'border-emerald-500/30' };
+      return { bg: 'bg-[#41B79B]/10', text: 'text-[#78D7BC]', border: 'border-[#41B79B]/25' };
     case 'business':
-      return { bg: 'bg-amber-950/40', text: 'text-amber-300', border: 'border-amber-500/30' };
+      return { bg: 'bg-[#41B79B]/10', text: 'text-[#78D7BC]', border: 'border-[#41B79B]/25' };
     case 'layoffs':
-      return { bg: 'bg-rose-950/40', text: 'text-rose-300', border: 'border-rose-500/30' };
+      return { bg: 'bg-[#593E97]/20', text: 'text-[#c4b5fd]', border: 'border-[#593E97]/40' };
     case 'entertainment':
     case 'music':
-      return { bg: 'bg-pink-950/40', text: 'text-pink-300', border: 'border-pink-500/30' };
+      return { bg: 'bg-[#593E97]/20', text: 'text-[#c4b5fd]', border: 'border-[#593E97]/40' };
     case 'india-regional':
-      return { bg: 'bg-orange-950/40', text: 'text-orange-300', border: 'border-orange-500/30' };
+      return { bg: 'bg-[#00E5FF]/10', text: 'text-[#8CEAF4]', border: 'border-[#00E5FF]/25' };
     default:
-      return { bg: 'bg-slate-800/60', text: 'text-slate-300', border: 'border-slate-700/50' };
+      return { bg: 'bg-slate-800/50', text: 'text-slate-300', border: 'border-slate-700/40' };
   }
 }
