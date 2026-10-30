@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { Navbar } from './components/Navbar';
 import { CategoryBar } from './components/CategoryBar';
 import { StoryCard } from './components/StoryCard';
@@ -25,6 +25,7 @@ import {
 type SortOption = 'latest' | 'trending' | 'multisource' | 'source';
 
 export const App: React.FC = () => {
+  const mainRef = useRef<HTMLElement>(null);
   const [currentTab, setCurrentTab] = useState<string>('feed');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -49,6 +50,43 @@ export const App: React.FC = () => {
   const [isStale, setIsStale] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
   const [totalStories, setTotalStories] = useState<number>(0);
+
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main || !('IntersectionObserver' in window)) return;
+
+    main.classList.add('reveal-ready');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { rootMargin: '0px 0px -24px 0px', threshold: 0.08 });
+
+    const observeRevealElements = (node: Node) => {
+      if (!(node instanceof Element)) return;
+      if (node.matches('.scroll-reveal:not(.is-visible)')) revealObserver.observe(node);
+      node.querySelectorAll('.scroll-reveal:not(.is-visible)').forEach((element) => {
+        revealObserver.observe(element);
+      });
+    };
+
+    main.querySelectorAll('.scroll-reveal:not(.is-visible)').forEach((element) => {
+      revealObserver.observe(element);
+    });
+
+    const mutationObserver = new MutationObserver((records) => {
+      records.forEach((record) => record.addedNodes.forEach(observeRevealElements));
+    });
+    mutationObserver.observe(main, { childList: true, subtree: true });
+
+    return () => {
+      mutationObserver.disconnect();
+      revealObserver.disconnect();
+    };
+  }, []);
 
   // Load Categories, Briefing, Sources, and Trending initially
   useEffect(() => {
@@ -266,7 +304,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main ref={mainRef} className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         
         {/* Stale Cache Notice if external upstream failed */}
         {isStale && (

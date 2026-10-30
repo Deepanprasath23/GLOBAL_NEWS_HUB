@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Globe,
   TrendingUp,
@@ -31,6 +31,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [localSearch, setLocalSearch] = useState(searchQuery);
 
+  useEffect(() => {
+    setLocalSearch(searchQuery);
+  }, [searchQuery]);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(localSearch.trim());
@@ -50,12 +54,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#111827]/90 shadow-md backdrop-blur-xl">
       {/* Main Nav Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex min-h-16 flex-wrap items-center justify-between gap-3 sm:gap-4">
           
           {/* Brand Logo */}
-          <div
+          <button
+            type="button"
             onClick={() => handleTabClick('feed')}
-            className="flex items-center gap-3 cursor-pointer group flex-shrink-0"
+            className="flex items-center gap-3 cursor-pointer group flex-shrink-0 text-left"
+            aria-label="Global Trends Hub home"
           >
             <div className="w-10 h-10 rounded-xl bg-[#1F2937] border border-white/10 p-[1px] group-hover:border-[#49CF9E]/50 transition-all">
               <div className="w-full h-full bg-[#111827] rounded-[10px] flex items-center justify-center">
@@ -73,7 +79,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 World Intelligence & News Network
               </p>
             </div>
-          </div>
+          </button>
 
           {/* Search bar */}
           <div className="flex-1 max-w-lg hidden md:block">
@@ -91,6 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="button"
                   onClick={handleClearSearch}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A0A0A0] hover:text-white"
+                  aria-label="Clear search"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -99,9 +106,10 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-1 sm:gap-2">
+          <nav className="flex w-full items-center justify-between gap-1 sm:w-auto sm:justify-end sm:gap-2">
             <button
               onClick={() => handleTabClick('feed')}
+              aria-label="Feed"
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'feed'
                   ? 'bg-[#49CF9E]/10 text-[#86B99A] border border-[#49CF9E]/30'
@@ -114,6 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabClick('trending')}
+              aria-label="Trending topics"
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'trending'
                   ? 'bg-[#49CF9E]/10 text-[#86B99A] border border-[#49CF9E]/30'
@@ -121,11 +130,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <TrendingUp className="w-4 h-4" />
-              <span>Trending</span>
+              <span className="hidden sm:inline">Trending</span>
             </button>
 
             <button
               onClick={() => handleTabClick('briefing')}
+              aria-label="Executive briefing"
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'briefing'
                   ? 'bg-[#49CF9E]/10 text-[#86B99A] border border-[#49CF9E]/30'
@@ -138,6 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleTabClick('sources')}
+              aria-label="Sources directory"
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
                 currentTab === 'sources'
                   ? 'bg-[#49CF9E]/10 text-[#86B99A] border border-[#49CF9E]/30'
@@ -153,6 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={onRefresh}
               disabled={isRefreshing}
+              aria-label="Sync latest live feeds"
               className="p-2 rounded-lg text-[#49CF9E] hover:text-white hover:bg-white/5 transition-colors disabled:opacity-50 flex items-center"
               title="Sync latest live feeds"
             >
@@ -162,7 +174,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile Search input */}
-        <div className="pb-3 md:hidden">
+        <div className="order-last w-full pb-3 md:hidden">
           <form onSubmit={handleSearchSubmit} className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#A0A0A0]" />
             <input
@@ -177,6 +189,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 type="button"
                 onClick={handleClearSearch}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#A0A0A0]"
+                aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
               </button>

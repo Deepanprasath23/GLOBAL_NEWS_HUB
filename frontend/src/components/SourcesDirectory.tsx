@@ -30,7 +30,7 @@ export const SourcesDirectory: React.FC<SourcesDirectoryProps> = ({ sources, isL
           {sources.map((s) => (
             <div
               key={s.id}
-              className="p-5 rounded-2xl bg-[#1F2937] border border-white/10 flex flex-col justify-between hover:border-[#49CF9E]/30 transition-colors"
+              className="scroll-reveal p-5 rounded-2xl bg-[#1F2937] border border-white/10 flex flex-col justify-between hover:border-[#49CF9E]/30 transition-colors"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">

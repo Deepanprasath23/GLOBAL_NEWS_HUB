@@ -14,7 +14,7 @@ export const HeroBriefing: React.FC<HeroBriefingProps> = ({ briefing, onOpenArti
   if (!briefing) return null;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#111827]/90 border border-white/10 p-6 sm:p-7 mb-7 shadow-md">
+    <div className="scroll-reveal relative overflow-hidden rounded-2xl bg-[#111827]/90 border border-white/10 p-6 sm:p-7 mb-7 shadow-md">
       <div className="relative z-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
           <div>

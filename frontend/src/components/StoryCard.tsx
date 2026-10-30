@@ -14,8 +14,8 @@ export const StoryCard: React.FC<StoryCardProps> = ({ article, onOpenDetails, la
 
   if (layoutMode === 'compact') {
     return (
-      <article className="p-3.5 sm:p-4 rounded-xl bg-[#1F2937] hover:bg-[#243041] border border-white/10 hover:border-[#49CF9E]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group">
-        <div className="flex-1 min-w-0 cursor-pointer" onClick={() => onOpenDetails(article)}>
+      <article className="scroll-reveal p-3.5 sm:p-4 rounded-xl bg-[#1F2937] hover:bg-[#243041] border border-white/10 hover:border-[#49CF9E]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 group">
+        <button type="button" className="flex-1 min-w-0 cursor-pointer text-left" onClick={() => onOpenDetails(article)} aria-label={`Read details for ${article.title}`}>
           <div className="flex items-center gap-2 mb-1.5 flex-wrap">
             <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${badgeStyle.bg} ${badgeStyle.text} ${badgeStyle.border}`}>
               {article.category.replace('-', ' ').toUpperCase()}
@@ -29,7 +29,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ article, onOpenDetails, la
           <h3 className="text-sm sm:text-base font-semibold text-[#F9FAFB] group-hover:text-[#86B99A] transition-colors line-clamp-1 font-['Outfit']">
             {article.title}
           </h3>
-        </div>
+        </button>
 
         <div className="flex items-center gap-3 flex-shrink-0 self-end sm:self-center">
           {article.score !== undefined && article.score > 0 && (
@@ -64,7 +64,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ article, onOpenDetails, la
   }
 
   return (
-    <article className="glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between group relative overflow-hidden transition-all duration-200">
+    <article className="scroll-reveal glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between group relative overflow-hidden transition-all duration-200">
       
       {/* Top Metadata Row */}
       <div className="flex items-center justify-between gap-2 mb-3">
@@ -85,7 +85,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ article, onOpenDetails, la
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 cursor-pointer" onClick={() => onOpenDetails(article)}>
+      <button type="button" className="w-full flex-1 cursor-pointer text-left" onClick={() => onOpenDetails(article)} aria-label={`Read details for ${article.title}`}>
         <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-[#86B99A] transition-colors line-clamp-2 leading-snug mb-2 font-['Outfit']">
           {article.title}
         </h3>
@@ -93,7 +93,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({ article, onOpenDetails, la
         <p className="text-sm text-[#D1D5DB] line-clamp-3 leading-relaxed mb-4">
           {article.summary}
         </p>
-      </div>
+      </button>
 
       {/* Footer Row: Metrics & Original Link */}
       <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#9CA3AF] mt-auto">

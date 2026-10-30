@@ -61,7 +61,7 @@ export const CategoryBar: React.FC<CategoryBarProps> = ({
   });
 
   return (
-    <div className="border-b border-white/10 bg-[#111827]/90 backdrop-blur-xl py-2.5 overflow-x-auto scrollbar-none sticky top-16 z-30">
+    <div className="border-b border-white/10 bg-[#111827]/90 backdrop-blur-xl py-2.5 overflow-x-auto scrollbar-none sticky top-[8.25rem] sm:top-[6.75rem] md:top-16 z-30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 min-w-max">
         
         {/* All Stories Button */}

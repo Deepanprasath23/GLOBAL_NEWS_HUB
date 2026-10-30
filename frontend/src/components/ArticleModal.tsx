@@ -14,12 +14,17 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ article, onClose }) 
   const badgeStyle = getCategoryBadgeStyle(article.category);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100e0b]/85 backdrop-blur-sm animate-in fade-in duration-150">
+    <div
+      className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#100e0b]/85 backdrop-blur-sm"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
       <div 
         role="dialog"
         aria-modal="true"
         aria-label={`Article details: ${article.title}`}
-        className="relative w-full max-w-3xl bg-[#111827] border border-white/10 rounded-2xl shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto"
+        className="modal-panel relative w-full max-w-3xl bg-[#111827] border border-white/10 rounded-2xl shadow-2xl p-5 sm:p-8 max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}

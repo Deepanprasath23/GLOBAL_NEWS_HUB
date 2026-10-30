@@ -69,7 +69,7 @@ export const TrendingSection: React.FC<TrendingSectionProps> = ({
             return (
               <div
                 key={idx}
-                className="glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between"
+                className="scroll-reveal glass-panel glass-panel-hover rounded-2xl p-5 flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-3">
